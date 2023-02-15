@@ -22,8 +22,11 @@
         $fileName = $_FILES['uploadedFile']['name'];
         $tempFileUrl = $_FILES['uploadedFile']['tmp_name'];
         $imageInfo = @getimagesize($tempFileUrl);
+        $sourceFileName = $_FILES['uploadedFile']['name'];
     //var_dump($imageInfo);
-        
+        $fileNameHash = hash("sha256", $sourceFileName) . hrtime(true)
+        . ".webp";
+        $newFileName = $fileNameHash;
     
         if(!is_array($imageInfo)){
             die("Nieprawidłowy format obrazu");
@@ -45,9 +48,18 @@
     //var_dump($_FILES);
         $targetUrl = $targetDir . $targetFileName . ".webp";
         imagewebp($gdImage, $targetUrl);
+        $db = new mysqli('localhost', 'root','', 'bazacms');
+        $dbTimestamp = date('Y-m-d H:i:s');
+        $q = "INSERT INTO post VALUES (NULL, ?, ?)";
+        $query = $db->prepare($q);
+        $filename = $targetFileName . ".webp";
+        $query->bind_param('ss', $dbTimestamp, $filename);
+        $result = $query->execute();
+        if(!$result) {  
+            die("Nie powiodło się!");
+        } 
+        echo "Plik został poprawnie załadowany";
     }
-
-    
     ?>
 </body>
 </html>
