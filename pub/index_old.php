@@ -1,3 +1,7 @@
+<?php
+require('./../src/config.php');
+?>
+
 <form action="" method="post" enctype="multipart/form-data">
         <label for="titleInput">Tytuł: </label>
         <input type="text" id="titleInput" name="title"><br>
