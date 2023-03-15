@@ -5,7 +5,9 @@ use Steampixel\Route;
 
 Route::add('/', function() {
     global $twig;
-    $twig->display("index.html.twig");
+    $posts = Post::getPage();
+    $t = array("posts" => $posts);
+    $twig->display("index.html.twig", $t);
 });
 route::add('/upload', function(){
     global $twig;
@@ -16,8 +18,8 @@ Route::add('/upload', function(){
     global $twig;
 
     $tempFileName = $_FILES['uploadedFile']['tmp_name'];
-    Post::upload($tempFileName);
-    
+    $title = $_POST['title'];
+    Post::upload($tempFileName, $title);
     
     $twig->display("index.html.twig");
 }, 'post');
