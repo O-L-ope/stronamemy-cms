@@ -107,6 +107,15 @@ Route::add('/admin', function() {
     }
 });
 
+Route::add('/admin/remove/([0-9]*)', function($id) {
+    global $twig;
+    if(User::isAuth()) {
+        Post::
+        header("Location: http://localhost/stronamemy-cms/admin");
+    }else{
+        http_response_code(403);
+    }
+});
 Route::run('/stronamemy-cms/pub');
 
 
