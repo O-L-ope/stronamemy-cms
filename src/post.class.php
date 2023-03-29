@@ -3,6 +3,8 @@ class Post {
     private string $title;
     private string $imageUrl;
     private string $timeStamp;
+    private int $authorID;
+    private string $authorName;
     
 
     function __construct(string $title, string $imageUrl, string $timeStamp)
