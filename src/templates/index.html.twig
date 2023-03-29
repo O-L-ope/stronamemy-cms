@@ -1,13 +1,14 @@
-{% include 'header.html.twig' %}
+{# {% include 'header.html.twig' %}
 <h1>Strona główna</h1>
 {% for post in posts %}
 <div>{{ post.getTitle }}</div>
 <div>{{ post.getTimestamp }}</div>
 <img src="{{ post.getImageUrl() }}">
 {% endfor %}
-{% include 'footer.html.twig' %}
+{% include 'footer.html.twig' %} #}
 
-<!-- {% include 'header.html.twig' %}
+
+{% include 'header.html.twig' %}
 <div id="pageContainer">
     <h1>{{pageTitle}}</h1>
     {# jeśli użytkownik jest zalogowany to pokaż #}

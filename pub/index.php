@@ -34,9 +34,13 @@ Route::add('/', function() {
 Route::add('/upload', function() {
     global $twig;
     $twigData = array("pageTitle" => "Wgraj mema");
-    if(isset($_SESSION['user']))
+    if(User::isAuth()) {
         $twigData['user'] = $_SESSION['user'];
-    $twig->display("upload.html.twig", $twigData);
+        $twig->display("upload.html.twig", $twigData);
+    }
+    else {
+        http_response_code(403);
+    }    
 });
 
 Route::add('/upload', function(){
@@ -77,14 +81,31 @@ Route::add('/login', function(){
 
 Route::add('/login', function() {
     global $twig;
-    if(isset($_POST['submit'])) User::login($_POST['email'], $_POST['password']);
-    {
-        header("Location: http://localhost/stronamemy-cms/pub");
+    if(isset($_POST['submit'])) {
+        if(User::login($_POST['email'], $_POST['password'])) {
+            //jeśli zalogowano poprawnie to wyświetl główną stronę
+            header("Location: http://localhost/bazamemy-cms/pub");
+        } else {
+            //jeśli nie zalogowano poprawnie wyświetl ponownie stronę logowania z komunikatem
+            $twigData = array("pageTitle" => "Zaloguj użytkownika",
+                                "message" => "Niepoprawny użytkownik lub hasło");
+            $twig->display("login.html.twig", $twigData);
+        }
     }
     
 
 }, 'post');
 
+Route::add('/admin', function() {
+    global $twig;
+    if(User::isAuth()) {
+        $postsList = Post::getPage(1, 100);
+        $twigData = array("postList" => $postsList);
+        $twig->display("admin.html.twig", $twigData);
+    } else {
+        http_response_code(403);
+    }
+});
 
 Route::run('/stronamemy-cms/pub');
 
