@@ -43,14 +43,22 @@ Route::add('/upload', function() {
     }    
 });
 
-Route::add('/upload', function(){
-    global $twig;
+// Route::add('/upload', function(){
+//     global $twig;
 
-    $tempFileName = $_FILES['uploadedFile']['tmp_name'];
-    $title = $_POST['title'];
-    Post::upload($tempFileName, $title);
+//     $tempFileName = $_FILES['uploadedFile']['tmp_name'];
+//     $title = $_POST['title'];
+//     Post::upload($tempFileName, $title);
     
-    $twig->display("index.html.twig");
+//     $twig->display("index.html.twig");
+// }, 'post');
+
+Route::add('/upload', function() {
+    global $twig;
+    if(isset($_POST['submit']))  {
+        Post::upload($_FILES['uploadedFile']['tmp_name'], $_POST['title'], $_POST['userId']);
+    }
+    header("Location: http://localhost/stronamemy-cms/pub");
 }, 'post');
 
 Route::add('/register', function(){
@@ -84,7 +92,7 @@ Route::add('/login', function() {
     if(isset($_POST['submit'])) {
         if(User::login($_POST['email'], $_POST['password'])) {
             //jeśli zalogowano poprawnie to wyświetl główną stronę
-            header("Location: http://localhost/bazamemy-cms/pub");
+            header("Location: http://localhost/stronamemy-cms/pub");
         } else {
             //jeśli nie zalogowano poprawnie wyświetl ponownie stronę logowania z komunikatem
             $twigData = array("pageTitle" => "Zaloguj użytkownika",
@@ -108,11 +116,10 @@ Route::add('/admin', function() {
 });
 
 Route::add('/admin/remove/([0-9]*)', function($id) {
-    global $twig;
     if(User::isAuth()) {
-        Post::
-        header("Location: http://localhost/stronamemy-cms/admin");
-    }else{
+        Post::remove($id);
+        header("Location: http://localhost/stronamemy-cms/pub/admin");
+    } else {
         http_response_code(403);
     }
 });

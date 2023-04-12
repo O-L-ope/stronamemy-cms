@@ -61,6 +61,11 @@ class User {
         $query->bind_param('s', $email);
         $query->execute();
         $result = $query->get_result();
+
+        //jeśli nie ma takiego konta zwróć false
+        if($result->num_rows == 0)
+            return false;
+
         $row = $result->fetch_assoc();
         $passwordHash = $row['password'];
         //jeżeli autoryzacja się powiedzie to zapisz użytkownika jako obiekt w sesji
@@ -68,10 +73,10 @@ class User {
             //hasła są zgodne - możemy zalogować użytkownika
             $u = new User($row['id'], $email);
             $_SESSION['user'] = $u;
+            return true;
         } else {
             return false;
         }
-
     }
 }
 
