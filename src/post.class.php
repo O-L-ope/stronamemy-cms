@@ -65,31 +65,65 @@ class Post {
         return $postsArray;
     }
 
-    static function upload(string $tempFilename, string $title = ""){
-        $uploadDir = "img/";
-        $imgInfo = getimagesize($tempFilename);
-        if(!is_array($imgInfo)){
-            die("BŁĄD: Przekazany plik nie jest obrazem");
+    // static function upload(string $tempFilename, string $title = ""){
+    //     $uploadDir = "img/";
+    //     $imgInfo = getimagesize($tempFilename);
+    //     if(!is_array($imgInfo)){
+    //         die("BŁĄD: Przekazany plik nie jest obrazem");
+    //     }
+    // $randomSeed = rand(10000, 99999) . hrtime(true);
+    // $hash = hash("sha256", $randomSeed);
+    // $targetFileName =  $uploadDir .$hash . ".webp";
+    // if(file_exists($targetFileName)){
+    //     die("BŁĄD: podany plik już istnieje");
+    // }
+    // $imageString = file_get_contents($tempFilename);
+    // $gdImage = @imagecreatefromstring($imageString);
+    // imagewebp($gdImage, $targetFileName);
+
+    // //odwołanie do globalnego połączenia
+    // global $db;
+
+    // //$query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?)");
+    // $query = $db->prepare("INSERT post (id, timestamp, filename, title) VALUES (NULL, ?, ?, ?, ?, false)");
+    // $dbTimeStamp = date("Y-m-d H:i:s");
+    // $query->bind_param("ssss", $dbTimeStamp, $targetFileName, $title);
+    // if(!$query->execute())
+    //     die("Błąd zapisu");
+    // }
+
+    static function upload(string $tempFileName, string $title, int $userId) {
+        $targetDir = "img/";
+        $imgInfo = getimagesize($tempFileName);
+        if(!is_array($imgInfo)) {
+            die("BŁĄD: Przekazany plik nie jest obrazem!");
         }
-    $randomSeed = rand(10000, 99999) . hrtime(true);
-    $hash = hash("sha256", $randomSeed);
-    $targetFileName =  $uploadDir .$hash . ".webp";
-    if(file_exists($targetFileName)){
-        die("BŁĄD: podany plik już istnieje");
+        $randomNumber = rand(10000, 99999) . hrtime(true);
+        $hash = hash("sha256", $randomNumber);
+        $newFileName = $targetDir . $hash . ".webp";
+        if(file_exists($newFileName)) {
+            die("BŁĄD: Podany plik już istnieje!");
+        }
+        $imageString = file_get_contents($tempFileName);
+        $gdImage = @imagecreatefromstring($imageString);
+        imagewebp($gdImage, $newFileName);
+
+        global $db;
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?, ?, false)");
+        $dbTimestamp = date("Y-m-d H:i:s");
+        $query->bind_param("sssi", $dbTimestamp, $newFileName, $title, $userId);
+        if(!$query->execute())
+            die("Błąd zapisu do bazy danych");
+
     }
-    $imageString = file_get_contents($tempFilename);
-    $gdImage = @imagecreatefromstring($imageString);
-    imagewebp($gdImage, $targetFileName);
-
-    //odwołanie do globalnego połączenia
-    global $db;
-
-    //$query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?)");
-    $query = $db->prepare("INSERT post (id, timestamp, filename, title) VALUES (NULL, ?, ?, ?)");
-    $dbTimeStamp = date("Y-m-d H:i:s");
-    $query->bind_param("sss", $dbTimeStamp, $targetFileName, $title);
-    if(!$query->execute())
-        die("Błąd zapisu");
+    public static function remove(int $id) : bool {
+        global $db;
+        $query = $db->prepare("UPDATE post SET removed = true WHERE id = ?");
+        $query->bind_param('i', $id);
+        if($query->execute())
+            return true;
+        else
+            return false;
     }
 }
 
