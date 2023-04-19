@@ -21,6 +21,9 @@ class Post {
     public function getTimestamp(){
         return $this->timeStamp;
     }
+    public function getFilename(){
+        return $this->imageUrl;
+    }
 
 
     static function get(int $id) : Post {

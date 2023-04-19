@@ -16,16 +16,13 @@
     <div id="loggedUser">Zalogowany użytkownik: {{ user.getName() }} </div>
     {% endif %}
     {% for post in postArray %}
+
     <div id="post">
         <h2>{{ post.getTitle() }} </h2>
         <img src="{{ post.getFilename() }}">
         <h6>Autor: {{post.getAuthorName() }}</h6>
         <h6>Data dodania: {{ post.getTimestamp() }} </h6>
-        <div class='vote'>
-        <button onclick="location.href='like/{{ post.getId() }}'" class='upvote' type='button'>+</button>
-        <div class='votecounter'>{{ post.getLikes() }}</div>
-        <button onclick="location.href='dislike/{{ post.getId() }}'" class='downvote' type='button'>-</button>
-    </div>
+
     </div>
     {% endfor %}
 </div>
