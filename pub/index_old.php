@@ -15,7 +15,7 @@ require('./../src/config.php');
 <?php 
 require('./../src/config.php');
 if(isset($_POST['submit']))
-    post::upload($_FILES['uploadedFile']['tmp_name'], $_POST['title']);
+    post::upload($_FILES['uploadedFile']['name']['tmp_name'], $_POST['title']);
 
 ?>
 
