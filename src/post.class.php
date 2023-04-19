@@ -5,6 +5,7 @@ class Post {
     private string $timeStamp;
     private int $authorID;
     private string $authorName;
+    private int $id;
     
 
     function __construct(string $title, string $imageUrl, string $timeStamp)
@@ -124,6 +125,14 @@ class Post {
             return true;
         else
             return false;
+    }
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getLikes() {
+        $likes = Likes::getLikes($this->getId());
+        return $likes;
     }
 }
 
