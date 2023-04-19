@@ -1,18 +1,20 @@
 <?php
 class Post {
+    private int $id;
     private string $title;
     private string $imageUrl;
     private string $timeStamp;
     private int $authorID;
     private string $authorName;
-    private int $id;
+    
     
 
-    function __construct(string $title, string $imageUrl, string $timeStamp)
+    function __construct(int $id, string $title, string $imageUrl, string $timeStamp)
     {
         $this->title = $title;
         $this->imageUrl = $imageUrl;
         $this->timeStamp = $timeStamp;
+        $this->id = $id;
     }
     
     public function getTitle(){
@@ -33,7 +35,7 @@ class Post {
         $query->execute();
         $result = $query->get_result();
         $resultArray = $result->fetch_assoc();
-        return new Post($resultArray['title'], $resultArray['filename'], $resultArray['timestamp']);
+        return new Post($resultArray['id'], $resultArray['title'], $resultArray['filename'], $resultArray['timestamp']);
     }
 
     public function getImageUrl() : string{
@@ -46,7 +48,7 @@ class Post {
         $query->execute();
         $result = $query->get_result();
         $row = $result->fetch_assoc();
-        $p = new Post($row['id'], $row['filename'], $row['timestamp']);
+        $p = new Post($row['id'],$row['title'], $row['filename'], $row['timestamp']);
         return $p; 
 
     }
@@ -61,7 +63,8 @@ class Post {
         //$row = $result->fetch_assoc();
         $postsArray = array();
         while($row = $result->fetch_array()) {
-            $post = new Post($row['title'],
+            $post = new Post($row['id'],
+                                $row['title'],
                              $row['filename'], 
                              $row['timestamp']);
             array_push($postsArray, $post);

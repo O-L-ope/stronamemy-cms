@@ -29,6 +29,7 @@ class Likes {
         $q2->bind_param('iii', $post_id, $user_id, $like);
 
         $q2->execute();
+        return true;
     }
     public static function getLikes(int $post_id) {
         global $db;

@@ -22,7 +22,10 @@
         <img src="{{ post.getFilename() }}">
         <h6>Autor: {{post.getAuthorName() }}</h6>
         <h6>Data dodania: {{ post.getTimestamp() }} </h6>
-
+        {# {{ post.getId() }} #}
+        <a href="like/{{ post.getId() }}"><button>+</button></a>
+        <a href="dislike/{{ post.getId() }}"><button>-</button></a>
+        {{post.getLikes()}}<br>
     </div>
     {% endfor %}
 </div>
